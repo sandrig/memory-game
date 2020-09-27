@@ -45,6 +45,20 @@ export const areOpensDifferent = board => {
   return openSymbols.length >= 2 && !L.allEquals(openSymbols)
 }
 
+const charCodeA = 'A'.charCodeAt(0)
+
+export const makeRandom = (m, n) => {
+  if ((m * n) / 2 > 26) throw new Error('too big')
+  if ((m * n) % 2) throw new Error('must be even')
+  return R.pipe(
+    () => R.range(0, (m * n) / 2), // [0, 1, 2, ...]
+    R.map(i => String.fromCharCode(i + charCodeA)), // ['A', 'B', 'C', ...]
+    R.chain(x => [x, x]), // ['A', 'A', 'B', 'B', ...]
+    L.shuffle, // ['A', 'C', 'B', 'D', ...]
+    R.map(symbol => ({ symbol, status: Cell.Status.Closed })),
+  )()
+}
+
 // VIEW
 export function BoardView({ board, onClickAt }) {
   return (
