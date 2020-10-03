@@ -27,12 +27,33 @@ export const isBlocking = cell => isOpen(cell) || isFailed(cell)
 export function View({ cell, onClick }) {
   let { status, symbol } = cell
   return (
-    <div className={`cell ${classByStatus(status)}`} onClick={onClick}>
+    <div className="cell" onClick={onClick}>
       {status === Status.Closed ? '' : symbol}
+      <style jsx>{`
+        .cell {
+          font-size: 4rem;
+          background: gray;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100px;
+          background: ${statusToBackground(status)};
+          cursor: ${status === Status.Closed ? 'pointer' : 'auto'};
+        }
+      `}</style>
     </div>
   )
 }
 
-export function classByStatus(status) {
-  return status.toLowerCase()
+export function statusToBackground(status) {
+  switch (status) {
+    case Status.Closed:
+      return 'darkgray'
+    case Status.Open:
+      return '#dcdcdc'
+    case Status.Done:
+      return '#a8db8f'
+    case Status.Failed:
+      return '#db8f8f'
+  }
 }
